@@ -1,9 +1,27 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using Mirror;
+using System;
 
 public class networkroomplayerext : NetworkRoomPlayer
 {
+    [SyncVar]
+    public string playerName;
+
+    public static event Action<networkroomplayerext, string> OnMessage;
+
+    [Command]
+    public void CmdSend(string message)
+    {
+        if (message.Trim() != "")
+            RpcReceive(message.Trim());
+    }
+
+    [ClientRpc]
+    public void RpcReceive(string message)
+    {
+        OnMessage?.Invoke(this, message);
+    }
 
     [SyncVar(hook = nameof(handelreadychange))]
     public bool isReady;
@@ -90,7 +108,9 @@ public class networkroomplayerext : NetworkRoomPlayer
     [Command]
     private void Cmdsetname(string displayName)
     {
+
         usernamename = displayName;
+        playerName = displayName;
         updateDisplay();
     }
 

@@ -13,10 +13,10 @@ public class playerchatwindow : MonoBehaviour
 
     public void Awake()
     {
-        Chatplayer.OnMessage += OnPlayerMessage;
+        networkroomplayerext.OnMessage += OnPlayerMessage;
     }
 
-    void OnPlayerMessage(Chatplayer player, string message)
+    void OnPlayerMessage(networkroomplayerext player, string message)
     {
         string prettyMessage = player.isLocalPlayer ?
             $"<color=red>{player.playerName}: </color> {message}" :
@@ -31,7 +31,7 @@ public class playerchatwindow : MonoBehaviour
             return;
 
         // get our player
-        Chatplayer player = NetworkClient.connection.identity.GetComponent<Chatplayer>();
+        networkroomplayerext player = NetworkClient.connection.identity.GetComponent<networkroomplayerext>();
 
         // send a message
         player.CmdSend(chatMessage.text.Trim());
